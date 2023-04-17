@@ -12,14 +12,14 @@ ___For example___ : https://whoget.onrender.com/asks to get json of all asks
 
 | STATUS  | METHOD | ENDPOINT       | RESPONSE 
 | --------|--------|----------------|----------
-| TESTING | GET    | `/`            | list of all endpoints 
-| TESTING | GET    | `/users`       | json of all users 
-| TESTING | POST   | `/user`        | creates a new user
-| TESTING | GET    | `/ask`         | json of all asks
-| TESTING | POST   | `/ask`         | creates an ask
-| TESTING | PATCH  | `/user/:id`    | updates user info with given id
-| TESTING | PATCH  | `/ask/:id`     | updates ask with given id
-| TESTING | DELETE | `/ask/:id`     | deletes ask with given id
+| UP      | GET    | `/`            | list of all endpoints 
+| UP      | GET    | `/users`       | json of all users 
+| UP      | POST   | `/user`        | creates a new user
+| UP      | GET    | `/ask`         | json of all asks
+| UP      | POST   | `/ask`         | creates an ask
+| UP      | PATCH  | `/user/:id`    | updates user info with given id
+| UP      | PATCH  | `/ask/:id`     | updates ask with given id
+| UP      | DELETE | `/ask/:id`     | deletes ask with given id
 
 <br>
 
