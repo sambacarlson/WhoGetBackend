@@ -12,7 +12,7 @@ import { log_message } from "./utilities/envSpecificHelpers";
 
 const app = express();
 //connect to db and listen to changes
-const DB_URI = process.env.DB_URI;
+const DB_URI:string = process.env.DB_URI? process.env.DB_URI : "";
 const PORT = process.env.PORT;
 mongoose
   .connect(DB_URI)
