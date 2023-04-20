@@ -9,11 +9,24 @@ import Express from "express";
  * user_ban_patch
  */
 
-/** Get all Categories from db */
+/** Get all users from database. takes a 'queryOptions' object as req.body if users banned or not. */
 const user_all_get = (req: Express.Request, res: Express.Response) => {
-  User.find()
-    .then(result => res.status(200).json(result))
-    .catch(err => res.status(400).json({message: err.message}))
+  const queryOptions: { showBanned: boolean, onlyBanned: boolean } = req.body;
+  if (queryOptions.onlyBanned === true) {
+    User.find({ "status.banned": { $eq: true } })
+      .then(result => res.status(200).json(result))
+      .catch(err => res.status(400).json({ message: err.message }))
+  }
+  else if (queryOptions.showBanned === true) {
+    User.find({})
+      .then(result => res.status(200).json(result))
+      .catch(err => res.status(400).json({ message: err.message }))
+  }
+  else {
+    User.find({ "status.banned": { $eq: false } })
+      .then(result => res.status(200).json(result))
+      .catch(err => res.status(400).json({ message: err.message }))
+  }
 }
 
 /** Add a User to db */
@@ -21,7 +34,7 @@ const user_create_post = (req: Express.Request, res: Express.Response) => {
   const user = new User(req.body)
   user.save()
     .then(result => res.status(201).json(result))
-    .catch(err => res.status(400).json({message: err.message}));
+    .catch(err => res.status(400).json({ message: err.message }));
 }
 
 /** Edit user of given id */
@@ -29,9 +42,9 @@ const user_edit_patch = (req: Express.Request, res: Express.Response) => {
   const id = req.params.id;
   User.findByIdAndUpdate(id, req.body)
     .then(() => res.status(200).end())
-    .catch(err => res.status(400).json({message: err.message}));
+    .catch(err => res.status(400).json({ message: err.message }));
 }
 
 
 //exports 
-export  {user_all_get, user_create_post, user_edit_patch};
+export { user_all_get, user_create_post, user_edit_patch };
