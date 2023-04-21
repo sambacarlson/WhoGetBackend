@@ -5,21 +5,21 @@ Users who sign up on this platform are able to make requests and get replies to 
 * The front end is build with react native and is hosted at https://whoget-admin.vercel.app/
 * The backend code is is hosted at https://whoget-api.onrender.com/
 * hit the provided endpionts by appending the endpoint on the table below to the hosted link above. <br>
-___For example___ : https://whoget.onrender.com/asks to get json of all asks 
+___For example___ : https://whoget.onrender.com/api/asks to get json of all asks 
 
 ### TABLE OF ENDPOINTS
 
 
 | STATUS  | METHOD | ENDPOINT       | RESPONSE 
 | --------|--------|----------------|----------
-| UP      | GET    | `/`            | list of all endpoints 
-| UP      | GET    | `/users`       | json of all users 
-| UP      | POST   | `/user`        | creates a new user
-| UP      | GET    | `/ask`         | json of all asks (takes '{categories: []}' in req.body for filtering)
-| UP      | POST   | `/ask`         | creates an ask
-| UP      | PATCH  | `/user/:id`    | updates user info with given id
-| UP      | PATCH  | `/ask/:id`     | updates ask with given id
-| UP      | DELETE | `/ask/:id`     | deletes ask with given id
+| UP      | GET    | `/api/`            | list of all endpoints 
+| UP      | GET    | `/api/users`       | json of all users 
+| UP      | POST   | `/api/user`        | creates a new user
+| UP      | GET    | `/api/ask`         | json of all asks (takes '{categories: []}' in req.body for filtering)
+| UP      | POST   | `/api/ask`         | creates an ask
+| UP      | PATCH  | `/api/user/:id`    | updates user info with given id
+| UP      | PATCH  | `/api/ask/:id`     | updates ask with given id
+| UP      | DELETE | `/api/ask/:id`     | deletes ask with given id
 
 <br>
 
