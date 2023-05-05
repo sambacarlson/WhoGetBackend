@@ -27,11 +27,11 @@ mongoose
 app.use(express.json());
 
 //routes
-app.use("/users", userRouter);
-app.use("/asks", askRouter);
+app.use("/api/users", userRouter);
+app.use("/api/asks", askRouter);
 
 /** all unknown routes return  list of endpoints */
-app.use("/", (req, res) => {
+app.use("/api", (req, res) => {
   const endpoints = {
     "/": "list of all endpoints",
     "/users": "json of all users",
@@ -44,6 +44,6 @@ app.use("/", (req, res) => {
 });
 
 // 404
-// app.use((req, res) => {
-//   res.status(404).json({message: '404 not found'});
-// } );
+app.use((req, res) => {
+  res.status(404).json({message: '404 not found'});
+} );
