@@ -10,8 +10,8 @@ ___For example___ : https://whoget.onrender.com/api/asks to get json of all asks
 ### TABLE OF ENDPOINTS
 
 
-| STATUS  | METHOD | ENDPOINT       | RESPONSE 
-| --------|--------|----------------|----------
+| STATUS  | METHOD | ENDPOINT           | RESPONSE 
+| --------|--------|--------------------|--------------
 | UP      | GET    | `/api/`            | list of all endpoints 
 | UP      | GET    | `/api/users`       | json of all users 
 | UP      | POST   | `/api/user`        | creates a new user
@@ -26,16 +26,16 @@ ___For example___ : https://whoget.onrender.com/api/asks to get json of all asks
 ### USER MODEL
 
 * `username`: String, required
-* `role`: ["admin", "standard"], default="standard"
 * `interests`: [String], required
 * `status`: {banned: Boolean, bannedDate: String}, required, banned defaults to false
-* `telephone`: Number, required
-* `email`: String
+* `telephone`: Number, required, unique
+* `email`: String, unique
 * `whatsapp`: Number
+* `photo`: String
 
 ### ASK MODEL
 
-* `userId`: String, required
+* `userInfo`: {user_id, username, photo}
 * `message`: String, required
 * `categories`: [String], required
 * `image`: String,
