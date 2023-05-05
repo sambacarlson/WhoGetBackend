@@ -15,7 +15,7 @@ const ask_all_get = (req: Express.Request, res: Express.Response) => {
   /** hide Hidden defaults to true */
   /// Only hidden
   if (queryOptions.onlyHidden) {
-    Ask.find({ "status.hidden": { $eq: true } }).sort({"status.hiddenDate": -1})
+    Ask.find({ "status.hidden": { $eq: true } }).sort({createdAt: -1})
       .then(result => res.status(200).json(result))
       .catch(err => res.status(400).json({ message: err.message }));
   }

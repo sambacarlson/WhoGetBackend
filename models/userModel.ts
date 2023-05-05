@@ -7,11 +7,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    role: {
-      type: String,
-      enum: ["admin", "standard"],
-      default: "standard",
-    },
     interests: {
       type: [String],
       required: true,
@@ -19,21 +14,25 @@ const userSchema = new Schema(
     status: {
       type: {
         banned: { type: Boolean, default: false, required: true },
-        bannedDate: { type: String, requred: false },
+        bannedDate: { type: String, default: '', required: false },
       },
-      required: true,
-      default: { banned: false, bannedDate: "" },
     },
     telephone: {
       type: Number,
       required: true,
+      unique: true,
     },
     email: {
       type: String,
+      unique: true,
       required: false,
     },
     whatsapp: {
       type: Number,
+      required: false,
+    },
+    photo: {
+      type: String,
       required: false,
     },
   },

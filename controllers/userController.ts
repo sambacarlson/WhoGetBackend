@@ -14,7 +14,7 @@ import Express from "express";
 const user_all_get = (req: Express.Request, res: Express.Response) => {
   const queryOptions: { showBanned: boolean, onlyBanned: boolean } = req.body;
   if (queryOptions.onlyBanned === true) {
-    User.find({ "status.banned": { $eq: true } }).sort({"status.bannedDate": -1})
+    User.find({ "status.banned": { $eq: true } }).sort({createdAt: -1})
       .then(result => res.status(200).json(result))
       .catch(err => res.status(400).json({ message: err.message }))
   }
