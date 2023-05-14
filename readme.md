@@ -13,7 +13,7 @@ ___For example___ : https://whoget.onrender.com/api/asks to get json of all asks
 | STATUS  | METHOD | ENDPOINT           | RESPONSE 
 | --------|--------|--------------------|--------------
 | UP      | GET    | `/api/`            | list of all endpoints 
-| UP      | GET    | `/api/users`       | json of all users 
+| UP      | GET    | `/api/users`       | json of all users takes (userAuthId || userDbId) as request (query) params
 | UP      | POST   | `/api/user`        | creates a new user
 | UP      | GET    | `/api/ask`         | json of all asks (takes '{categories: []}' in req.body for filtering)
 | UP      | POST   | `/api/ask`         | creates an ask

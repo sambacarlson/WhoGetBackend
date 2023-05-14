@@ -7,6 +7,11 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    uid: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     interests: {
       type: [String],
       required: true,
@@ -14,12 +19,12 @@ const userSchema = new Schema(
     status: {
       type: {
         banned: { type: Boolean, default: false, required: true },
-        bannedDate: { type: String, default: '', required: false },
+        bannedDate: { type: String, default: "", required: false },
       },
     },
     telephone: {
       type: Number,
-      required: true,
+      required: false,
       unique: true,
     },
     email: {
