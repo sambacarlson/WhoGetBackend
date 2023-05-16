@@ -31,17 +31,14 @@ app.use(express.json());
 const allowedOrigins = [
   "http://127.0.0.1:3000",
   "https://whoget-admin.vercel.app/",
+  "https://whoget-admin-sambacarlson.vercel.app/",
+  "https://whoget-admin-git-dev-sambacarlson.vercel.app/",
 ];
+const allowedMethods = ["GET", "POST", "PUT", "DELETE", "PATCH"];
 app.use(
   cors({
-    // origin: function (origin, callback) {
-    //   if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-    //     callback(null, true);
-    //   } else {
-    //     callback(new Error('Not allowed by CORS policy set at whoget-api server'));
-    //   }
-    // }
     origin: allowedOrigins,
+    methods: allowedMethods,
   })
 );
 
@@ -52,9 +49,11 @@ app.use("/api/asks", askRouter);
 /** all unknown routes return  list of endpoints */
 app.use("/api", (req, res) => {
   const endpoints = {
-    "/": "list of all endpoints",
-    "/asks/:id": "create/update/delete an ask",
-    "post(/users/:id)": "create/update a user",
+    "/asks/": "[post]create an ask",
+    "/users/": "[put]create/update a user",
+    "/asks/:id": "[patch, delete]update/delete an ask",
+    "/asks?categories=''&showHidden=": "[get]fetch spcific asks",
+    "/users/:id": "[get]get a particular user.can be userAuth or userDB ids",
     '"repo"': "https://github.com/sambacarlson/WhoGetBackend",
   };
   res.status(303).json(endpoints);

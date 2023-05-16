@@ -12,20 +12,22 @@ ___For example___ : https://whoget.onrender.com/api/asks to get json of all asks
 
 | STATUS  | METHOD | ENDPOINT           | RESPONSE 
 | --------|--------|--------------------|--------------
-| UP      | GET    | `/api/`            | list of all endpoints 
-| UP      | GET    | `/api/users`       | json of all users takes (userAuthId || userDbId) as request (query) params
-| UP      | POST   | `/api/user`        | creates a new user
-| UP      | GET    | `/api/ask`         | json of all asks (takes '{categories: []}' in req.body for filtering)
-| UP      | POST   | `/api/ask`         | creates an ask
-| UP      | PATCH  | `/api/user/:id`    | updates user info with given id
-| UP      | PATCH  | `/api/ask/:id`     | updates ask with given id
-| UP      | DELETE | `/api/ask/:id`     | deletes ask with given id
+| UP      | GET    | `/api/`            | lists of all endpoints 
+| UP      | GET    | `/api/users`       | gets all users
+| UP      | GET    | `/api/users?`      | gets particular user by google uid or mongodb id
+| UP      | PUT    | `/api/users`        | creates a new user
+| UP      | GET    | `/api/asks?`        | get all asks {categories: string[], showHidden: boolean}
+| UP      | POST   | `/api/asks`         | creates an ask
+| UP      | PATCH  | `/api/users/:id`    | updates user info with given id
+| UP      | PATCH  | `/api/asks/:id`     | updates ask with given id
+| UP      | DELETE | `/api/asks/:id`     | deletes ask with given id
 
 <br>
 
 ### USER MODEL
 
 * `username`: String, required
+* `uid`: String, required, unique
 * `interests`: [String], required
 * `status`: {banned: Boolean, bannedDate: String}, required, banned defaults to false
 * `telephone`: Number, required, unique
