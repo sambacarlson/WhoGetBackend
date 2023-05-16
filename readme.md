@@ -15,7 +15,7 @@ ___For example___ : https://whoget.onrender.com/api/asks to get json of all asks
 | UP      | GET    | `/api/`            | lists of all endpoints 
 | UP      | GET    | `/api/users`       | gets all users
 | UP      | GET    | `/api/users?`      | gets particular user by google uid or mongodb id
-| UP      | POST   | `/api/users`        | creates a new user
+| UP      | PUT    | `/api/users`        | creates a new user
 | UP      | GET    | `/api/asks?`        | get all asks {categories: string[], showHidden: boolean}
 | UP      | POST   | `/api/asks`         | creates an ask
 | UP      | PATCH  | `/api/users/:id`    | updates user info with given id
