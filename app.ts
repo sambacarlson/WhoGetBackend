@@ -30,9 +30,9 @@ app.use(express.json());
 //cors
 const allowedOrigins = [
   "http://127.0.0.1:3000",
-  "https://whoget-admin.vercel.app/",
-  "https://whoget-admin-sambacarlson.vercel.app/",
-  "https://whoget-admin-git-dev-sambacarlson.vercel.app/",
+  "https://whoget-admin.vercel.app",
+  "https://whoget-admin-sambacarlson.vercel.app",
+  "https://whoget-admin-git-dev-sambacarlson.vercel.app",
 ];
 const allowedMethods = ["GET", "POST", "PUT", "DELETE", "PATCH"];
 app.use(
