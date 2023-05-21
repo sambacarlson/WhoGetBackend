@@ -3,12 +3,17 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema; //contructor
 const askSchema = new Schema(
   {
-    userInfo: { /// userInfo is needed hare to reduce the number of calls required when fetching this data
-      type: {
-        user_id: {type: String, required: true},
-        username: {type: String, required: true},
-        photo: {type: String, required: false},
-      },
+    // userInfo: { /// userInfo is needed hare to reduce the number of calls required when fetching this data
+    //   type: {
+    //     user_id: {type: String, required: true},
+    //     username: {type: String, required: true},
+    //     photo: {type: String, required: false},
+    //   },
+    // },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     },
     message: {
       type: String,
@@ -18,12 +23,13 @@ const askSchema = new Schema(
       type: [String],
       required: true,
     },
-    image: {
-      type: String,
+    images: {
+      type: [String],
       required: false,
     },
     expiry: {
       type: Number,
+      enum: [1, 2, 3, 4, 5, 6, 7],
       required: true,
       default: 3,
     },
@@ -36,8 +42,6 @@ const askSchema = new Schema(
   },
   { timestamps: true }
 );
-
-// TODO: Use regex to validate/restrict boundaries for all properties
 
 const Ask = mongoose.model("Ask", askSchema);
 export default Ask;
