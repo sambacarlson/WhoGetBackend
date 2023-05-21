@@ -2,14 +2,15 @@
 
 WhoGet app is a mobile application which help people get services from others easily. <br>
 Users who sign up on this platform are able to make requests and get replies to their request by email, whatsapp or call. subscribers can also reply to other's questions. visitors can view requests but cannot reply nor can they make requests of their own.
-* The front end is build with react native and is hosted at https://whoget-admin.vercel.app/
+* The front end is build with next js(for admin dashboard) and is hosted at https://whoget-admin.vercel.app/
+* link to mobile app on play store to be added soon.
 * The backend code is is hosted at https://whoget-api.onrender.com/
-* hit the provided endpionts by appending the endpoint on the table below to the hosted link above. <br>
-___For example___ : https://whoget.onrender.com/api/asks to get json of all asks 
+<!--* hit the provided endpionts by appending the endpoint on the table below to the hosted link above. <br>
+___For example___ : https://whoget.onrender.com/api/asks to get json of all asks -->
 
-### TABLE OF ENDPOINTS
+### TABLE OF ENDPOINTS (and structure of models will be added bellow, soon)
 
-
+<!---
 | STATUS  | METHOD | ENDPOINT           | RESPONSE 
 | --------|--------|--------------------|--------------
 | UP      | GET    | `/api/`            | lists of all endpoints 
@@ -43,3 +44,4 @@ ___For example___ : https://whoget.onrender.com/api/asks to get json of all asks
 * `image`: String,
 * `expiry`: Number, required, default=3
 * `status`: {hidden: Boolean, hiddenDate: String}, required, hidden defaults to false
+-->

@@ -1,15 +1,159 @@
+import { error } from "console";
 import Ask from "../models/askModel";
+// import User from "../models/userModel";
 import Express from "express";
-import mongoose from "mongoose";
+import mongoose, { MongooseError } from "mongoose";
 
 /** METHODS:
- * ask_all_get
- * ask_create_post
- * ask_edit_patch
- * ask_delete
- * ask_hide_patch
+ * get_all // get all asks regardless
+ * get_one_by_id // used to get one specific ask
+ * get_many_by_categories //used to get all asks of given category list
+ * get_many_unflagged //used to get all asks that are not hidden and user is not banned
+ * get_many_unflagged_by_categories //used to get categorized asks that are not hidden and user is not banned
+ * get_many_by_user_id // used to get user's own asks
+ * post_one // creates an ask
+ * patch_one_by_id // used hide/show asks
+ * delete_one_by_id // used by user to delete asks they no longer want on the platform
  */
 
+// get_all
+async function get_all(req: Express.Request, res: Express.Response) {
+  try {
+    const asks = await Ask
+      .find({})
+      .populate({ path: 'user', select: '-createdAt -updatedAt -interests' })
+      .sort({ createdAt: -1 });
+    res.status(200).json(asks);
+  } catch (error: any) {
+    res.status(404).json({ message: error.message });
+  }
+}
+
+
+// get_one_by_id
+async function get_one_by_id(req: Express.Request, res: Express.Response) {
+  try {
+    const { askId } = req.params;
+    const ask = await Ask
+      .find({ _id: { $eq: askId } })
+      .populate({ path: 'user', select: '-createdAt -updatedAt -interests' })
+      .sort({ createdAt: -1 });
+    res.status(200).json(ask);
+  }
+  catch (error: any) {
+    res.status(404).json({ message: error.message });
+  }
+}
+
+// get_many_by_categories //used to get all asks of given category list
+async function get_many_by_categories(req: Express.Request, res: Express.Response) {
+  try {
+    const { categories }: { categories?: string } = req.query;
+    const categoryList = categories ? categories.split(",").map((item) => item.trim()) : []; //convert query string to array
+    const asks = await Ask
+      .find({ category: { $in: categoryList } })
+      .populate({ path: 'user', select: '-createdAt -updatedAt -interests' })
+      .sort({ createdAt: -1 });
+    res.status(200).json(asks);
+  }
+  catch (error: any) {
+    res.status(404).json({ message: error.message });
+  }
+}
+
+// get_many_unflagged //used to get all asks that are not hidden and creators are no banned
+async function get_many_unflagged(req: Express.Request, res: Express.Response) {
+  try {
+    const asks = await Ask
+      .find({ 'status.hidden': { $eq: false } })
+      .populate({ path: 'user', match: { 'status.banned': { $eq: false } }, select: '-createdAt -updatedAt -interests' }) // users must not be banned, nor must asks be hidden
+      .sort({ createdAt: -1 });
+    res.status(200).json(asks);
+  }
+  catch (error: any) {
+    res.status(404).json({ message: error.message });
+  }
+}
+
+// get_many_unflagged_by_categories //used to get categorized asks that are not hidden and user is not banned
+async function get_many_unflagged_by_categories(req: Express.Request, res: Express.Response) {
+  try {
+    const { categories }: { categories?: string } = req.query;
+    const categoryList = categories? categories.split(",").map((item) => item.trim()) : []; //convert query string to array
+    const asks = await Ask
+     .find({ category: { $in: categoryList },'status.hidden': { $eq: false } })
+     .populate({ path: 'user', match: {'status.banned': { $eq: false } }, select: '-createdAt -updatedAt -interests' }) // users must not be banned, nor must asks be hidden
+     .sort({ createdAt: -1 });
+    res.status(200).json(asks);
+  }
+  catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+// get_many_by_user_id // used to get user's own asks
+async function get_many_by_user_id(req: Express.Request, res: Express.Response) {
+  try {
+    const { userId } = req.params
+    const asks = await Ask
+      .find({})
+      .populate({ path: 'user', match: { '_id': { $eq: userId } } })
+      .sort({ createdAt: -1 });
+    res.status(200).json(asks)
+  } catch (error: any) {
+    res.status(404).json({ message: error.message });
+  }
+}
+
+// post_one // creates an ask
+async function post_one(req: Express.Request, res: Express.Response) {
+  try {
+    const { newAsk } = req.body
+    const createdAsk = await Ask.create(newAsk);
+    res.status(201).json(createdAsk);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+// patch_one_by_id // used hide/show asks
+async function patch_one_by_id(req: Express.Request, res: Express.Response) {
+  try {
+    const { askId } = req.params;
+    const { update } = req.body;
+    const ask = await Ask.findByIdAndUpdate(askId, { $set: update }, { new: true }); // mew=true says return the new object intead of the default old.
+    res.status(200).json(ask);
+  } catch {
+    res.status(400).json({ message: 'Cannot find this ask' })
+  }
+}
+
+// delete_one_by_id // used by user to delete asks they no longer want on the platform
+async function delete_one_by_id(req: Express.Request, res: Express.Response) {
+  try {
+    const { askId } = req.params;
+    const deleted = await Ask.findByIdAndDelete(askId);
+    res.status(200).json(deleted);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+export {
+  get_all,
+  get_one_by_id,
+  get_many_by_categories,
+  get_many_unflagged,
+  get_many_unflagged_by_categories,
+  get_many_by_user_id,
+  post_one,
+  patch_one_by_id,
+  delete_one_by_id
+}
+
+
+////////// OLD ////////////
+/*
 const ask_all_get = (req: Express.Request, res: Express.Response) => {
   const queryOptions: {
     categories?: [string];
@@ -57,7 +201,7 @@ const ask_all_get = (req: Express.Request, res: Express.Response) => {
   }
 };
 
-/** Add and execise to the database. ensure all required attributes are available with their right types */
+//* Add and execise to the database. ensure all required attributes are available with their right types 
 const ask_create_post = (req: Express.Request, res: Express.Response) => {
   const ask = new Ask(req.body);
   ask
@@ -66,7 +210,7 @@ const ask_create_post = (req: Express.Request, res: Express.Response) => {
     .catch((err) => res.status(400).json({ message: err.message }));
 };
 
-/** Edit an existing ask on the database with entry */
+//* Edit an existing ask on the database with entry 
 const ask_edit_patch = (req: Express.Request, res: Express.Response) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -77,7 +221,7 @@ const ask_edit_patch = (req: Express.Request, res: Express.Response) => {
     .catch((err) => res.status(400).json({ message: err.message }));
 };
 
-/** Deletes the ask with id provided to the req params */
+//* Deletes the ask with id provided to the req params 
 const ask_delete = (req: Express.Request, res: Express.Response) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -87,7 +231,7 @@ const ask_delete = (req: Express.Request, res: Express.Response) => {
     .then(() => res.status(200).end())
     .catch((err) => res.status(400).json({ message: err.message }));
 };
-/** Hide the ask with given id */
+//* Hide the ask with given id 
 const ask_hide_patch = (req: Express.Request, res: Express.Response) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -106,3 +250,5 @@ export {
   ask_delete,
   ask_hide_patch,
 };
+
+*/

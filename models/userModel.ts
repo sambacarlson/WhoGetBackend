@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const Schema = mongoose.Schema; //constructor
 const userSchema = new Schema(
   {
@@ -7,10 +8,15 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    uid: {
+    oAuthId: {
       type: String,
       required: true,
       unique: true,
+    },
+    oAuthProvider: {
+      type: String,
+      enum: ["google", "facebook"],
+      required: true,
     },
     interests: {
       type: [String],
@@ -44,7 +50,6 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-// TODO: Use regex to validate/restrict boundaries for all properties
 
 const User = mongoose.model("User", userSchema);
 export default User;
