@@ -108,7 +108,7 @@ async function get_many_by_user_id(req: Express.Request, res: Express.Response) 
 // post_one // creates an ask
 async function post_one(req: Express.Request, res: Express.Response) {
   try {
-    const { newAsk } = req.body
+    const newAsk = req.body
     const createdAsk = await Ask.create(newAsk);
     res.status(201).json(createdAsk);
   } catch (error: any) {
@@ -120,11 +120,11 @@ async function post_one(req: Express.Request, res: Express.Response) {
 async function patch_one_by_id(req: Express.Request, res: Express.Response) {
   try {
     const { askId } = req.params;
-    const { update } = req.body;
+    const update = req.body;
     const ask = await Ask.findByIdAndUpdate(askId, { $set: update }, { new: true }); // mew=true says return the new object intead of the default old.
     res.status(200).json(ask);
-  } catch {
-    res.status(400).json({ message: 'Cannot find this ask' })
+  } catch(error:any) {
+    res.status(400).json({ message: error.message })
   }
 }
 
