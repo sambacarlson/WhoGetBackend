@@ -18,7 +18,7 @@ router.get("/many/categories", get_many_by_categories);
 router.get("/many/unflagged", get_many_unflagged);
 router.get("/many/unflagged/categories", get_many_unflagged_by_categories)
 router.post("/one", post_one);
-router.delete("/one/ask/:askId", delete_one_by_id);
+router.delete("/one/:askId", delete_one_by_id);
 
 //routes with cutom parts should always be placed at the bottom
 router.get("/one/byask:askId", get_one_by_id);

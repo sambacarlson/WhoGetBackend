@@ -65,8 +65,8 @@ async function get_many_by_categories(req: Express.Request, res: Express.Respons
 async function get_many_unflagged(req: Express.Request, res: Express.Response) {
   try {
     const asks = await Ask
-      .find({ 'status.hidden': { $eq: false } })
-      .populate({ path: 'user', match: { 'status.banned': { $eq: false } }, select: '-createdAt -updatedAt -interests' }) // users must not be banned, nor must asks be hidden
+      .find({ 'status.hidden': { $eq: false }, 'user.status.banned': {$eq: false} })
+      .populate({ path: 'user', select: '-createdAt -updatedAt -interests' }) // users must not be banned, nor must asks be hidden
       .sort({ createdAt: -1 });
     res.status(200).json(asks);
   }
@@ -81,8 +81,8 @@ async function get_many_unflagged_by_categories(req: Express.Request, res: Expre
     const { categories }: { categories?: string } = req.query;
     const categoryList = categories? categories.split(",").map((item) => item.trim()) : []; //convert query string to array
     const asks = await Ask
-     .find({ category: { $in: categoryList },'status.hidden': { $eq: false } })
-     .populate({ path: 'user', match: {'status.banned': { $eq: false } }, select: '-createdAt -updatedAt -interests' }) // users must not be banned, nor must asks be hidden
+     .find({ category: { $in: categoryList },'status.hidden': { $eq: false }, 'user.status.banned': {$eq: false} })
+     .populate({ path: 'user', select: '-createdAt -updatedAt -interests' }) // users must not be banned, nor must asks be hidden
      .sort({ createdAt: -1 });
     res.status(200).json(asks);
   }
@@ -96,8 +96,8 @@ async function get_many_by_user_id(req: Express.Request, res: Express.Response) 
   try {
     const { userId } = req.params
     const asks = await Ask
-      .find({})
-      .populate({ path: 'user', match: { '_id': { $eq: userId } } })
+      .find({user: userId})
+      .populate({ path: 'user' } )
       .sort({ createdAt: -1 });
     res.status(200).json(asks)
   } catch (error: any) {
