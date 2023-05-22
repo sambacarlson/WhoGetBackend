@@ -18,7 +18,7 @@ async function get_all(req: Express.Request, res: Express.Response) {
     const users = await User.find({});
     res.status(200).json(users);
   } catch (error: any) {
-    res.status(400).json(error);
+    res.status(400).json(error.message);
   }
 }
 
@@ -29,7 +29,7 @@ async function get_one_by_id(req: Express.Request, res: Express.Response) {
     const user = await User.findById(userId);
     res.status(200).json(user);
   } catch (error: any) {
-    res.status(400).json(error);
+    res.status(400).json(error.message);
   }
 }
 
@@ -39,7 +39,7 @@ async function get_many_flagged(req: Express.Request, res: Express.Response) {
     const user = await User.find({ 'stutus.banned': { $eq: true } });
     res.status(200).json(user);
   } catch (error: any) {
-    res.status(400).json(error);
+    res.status(400).json(error.message);
   }
 }
 
@@ -49,18 +49,37 @@ async function get_many_unflagged(req: Express.Request, res: Express.Response) {
     const user = await User.find({'stutus.banned': { $eq: false } });
     res.status(200).json(user);
   } catch (error: any) {
-    res.status(400).json(error);
+    res.status(400).json(error.message);
   }
 }
 
-// post_one
-async function post_one(req:Express.Request, res: Express.Response) {
+// post_one. it will update user if already exists
+// async function post_one(req:Express.Request, res: Express.Response) {
+//   try {
+//     const user = new User(req.body);
+//     await user.save();
+//     res.status(201).json(user);
+//   } catch (error: any) {
+//     res.status(400).json(error);
+//   }
+// }
+
+async function post_one(req: Express.Request, res: Express.Response) {
   try {
-    const user = new User(req.body);
-    await user.save();
-    res.status(201).json(user);
+    const newUserData = req.body;
+    // Find the user by oAuthId
+    let existingUser = await User.findOne({ oAuthId: newUserData.oAuthId });
+    if (existingUser) {
+      // If user already exists, update their information
+      existingUser = await User.findOneAndUpdate({ oAuthId: newUserData.oAuthId }, newUserData);
+      res.status(200).json(existingUser);
+    } else {
+      // If user doesn't exist, create a new user
+      const createdUser = await User.create(newUserData);
+      res.status(201).json(createdUser);
+    }
   } catch (error: any) {
-    res.status(400).json(error);
+    res.status(400).json({ message: error.message });
   }
 }
 
@@ -71,7 +90,7 @@ async function patch_one_by_id(req: Express.Request, res: Express.Response) {
     const user = await User.findByIdAndUpdate(userId, req.body, { new: true });
     res.status(200).json(user);
   } catch (error: any) {
-    res.status(400).json(error);
+    res.status(400).json(error.message);
   }
 }
 
