@@ -39,7 +39,7 @@ app.use("/api/asks", askRouter);
 /** all unknown routes return  list of endpoints */
 app.use("/api", (req, res) => {
   const endpoints = {
-    message: "all endpoints you can use will be published here. Soon"
+    info: "all endpoints you can use will be published here. Soon"
   };
   res.status(303).json(endpoints);
 });

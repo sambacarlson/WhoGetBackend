@@ -1,6 +1,5 @@
 node_modules
 /.env
 
-## used to generate predefined data
+## 
 /z_rough.ts
-/z_app.ts

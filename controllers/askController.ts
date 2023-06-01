@@ -3,6 +3,7 @@ import Ask from "../models/askModel";
 // import User from "../models/userModel";
 import Express from "express";
 import mongoose, { MongooseError } from "mongoose";
+import { log_message } from "../utilities/envSpecificHelpers";
 
 /** METHODS:
  * get_all // get all asks regardless
@@ -10,6 +11,7 @@ import mongoose, { MongooseError } from "mongoose";
  * get_many_by_categories //used to get all asks of given category list
  * get_many_unflagged //used to get all asks that are not hidden and user is not banned
  * get_many_unflagged_by_categories //used to get categorized asks that are not hidden and user is not banned
+ * get_many_hidden //gets all hidden asks
  * get_many_by_user_id // used to get user's own asks
  * post_one // creates an ask
  * patch_one_by_id // used hide/show asks
@@ -25,7 +27,7 @@ async function get_all(req: Express.Request, res: Express.Response) {
       .sort({ createdAt: -1 });
     res.status(200).json(asks);
   } catch (error: any) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json(error.message);
   }
 }
 
@@ -41,7 +43,7 @@ async function get_one_by_id(req: Express.Request, res: Express.Response) {
     res.status(200).json(ask);
   }
   catch (error: any) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json(error.message);
   }
 }
 
@@ -51,27 +53,28 @@ async function get_many_by_categories(req: Express.Request, res: Express.Respons
     const { categories }: { categories?: string } = req.query;
     const categoryList = categories ? categories.split(",").map((item) => item.trim()) : []; //convert query string to array
     const asks = await Ask
-      .find({ category: { $in: categoryList } })
+      .find({ categories: { $in: categoryList } })
       .populate({ path: 'user', select: '-createdAt -updatedAt -interests' })
       .sort({ createdAt: -1 });
     res.status(200).json(asks);
   }
   catch (error: any) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json(error.message);
   }
 }
 
 // get_many_unflagged //used to get all asks that are not hidden and creators are no banned
 async function get_many_unflagged(req: Express.Request, res: Express.Response) {
   try {
-    const asks = await Ask
-      .find({ 'status.hidden': { $eq: false }, 'user.status.banned': {$eq: false} })
+    const unfiltered = await Ask
+      .find({ 'status.hidden': { $eq: false } })
       .populate({ path: 'user', select: '-createdAt -updatedAt -interests' }) // users must not be banned, nor must asks be hidden
       .sort({ createdAt: -1 });
+    const asks:any = unfiltered.filter((ask: any) => ask.user.status.banned===false)
     res.status(200).json(asks);
   }
   catch (error: any) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json(error.message);
   }
 }
 
@@ -80,14 +83,29 @@ async function get_many_unflagged_by_categories(req: Express.Request, res: Expre
   try {
     const { categories }: { categories?: string } = req.query;
     const categoryList = categories? categories.split(",").map((item) => item.trim()) : []; //convert query string to array
-    const asks = await Ask
-     .find({ category: { $in: categoryList },'status.hidden': { $eq: false }, 'user.status.banned': {$eq: false} })
+    const unfiltered = await Ask
+     .find({ categories: { $in: categoryList },'status.hidden': { $eq: false } })
      .populate({ path: 'user', select: '-createdAt -updatedAt -interests' }) // users must not be banned, nor must asks be hidden
      .sort({ createdAt: -1 });
+    const asks:any = unfiltered.filter((ask: any) => ask.user.status.banned===false)
     res.status(200).json(asks);
   }
   catch (error: any) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json(error.message);
+  }
+}
+
+// get_many_hidden //used to get all hidden asks only
+async function get_many_hidden(req: Express.Request, res: Express.Response) {
+  try {
+    const asks = await Ask
+      .find({ 'status.hidden': { $eq: true } })
+      .populate({ path: 'user', select: '-createdAt -updatedAt -interests' }) // users must not be banned, nor must asks be hidden
+      .sort({ createdAt: -1 });
+    res.status(200).json(asks);
+  }
+  catch (error: any) {
+    res.status(404).json(error.message);
   }
 }
 
@@ -101,7 +119,7 @@ async function get_many_by_user_id(req: Express.Request, res: Express.Response) 
       .sort({ createdAt: -1 });
     res.status(200).json(asks)
   } catch (error: any) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json(error.message);
   }
 }
 
@@ -112,7 +130,7 @@ async function post_one(req: Express.Request, res: Express.Response) {
     const createdAsk = await Ask.create(newAsk);
     res.status(201).json(createdAsk);
   } catch (error: any) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json(error.message);
   }
 }
 
@@ -124,7 +142,7 @@ async function patch_one_by_id(req: Express.Request, res: Express.Response) {
     const ask = await Ask.findByIdAndUpdate(askId, { $set: update }, { new: true }); // mew=true says return the new object intead of the default old.
     res.status(200).json(ask);
   } catch(error:any) {
-    res.status(400).json({ message: error.message })
+    res.status(400).json(error.message)
   }
 }
 
@@ -135,7 +153,7 @@ async function delete_one_by_id(req: Express.Request, res: Express.Response) {
     const deleted = await Ask.findByIdAndDelete(askId);
     res.status(200).json(deleted);
   } catch (error: any) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json(error.message);
   }
 }
 
@@ -145,6 +163,7 @@ export {
   get_many_by_categories,
   get_many_unflagged,
   get_many_unflagged_by_categories,
+  get_many_hidden,
   get_many_by_user_id,
   post_one,
   patch_one_by_id,

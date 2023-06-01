@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import User from "../models/userModel";
 import Express from "express";
+import { log_message } from "../utilities/envSpecificHelpers";
 
 /** METHODS:
  * get_all
  * get_one_by_id
- * get_many_flagged
+ * get_many_banned
  * get_many_unflagged
  * post_one
  * patch_one_by_id
@@ -33,10 +34,10 @@ async function get_one_by_id(req: Express.Request, res: Express.Response) {
   }
 }
 
-// get_many_flagged
-async function get_many_flagged(req: Express.Request, res: Express.Response) {
+// get_many_banned
+async function get_many_banned(req: Express.Request, res: Express.Response) {
   try {
-    const user = await User.find({ 'stutus.banned': { $eq: true } });
+    const user = await User.find({ 'status.banned': { $eq: true } });
     res.status(200).json(user);
   } catch (error: any) {
     res.status(400).json(error.message);
@@ -46,7 +47,7 @@ async function get_many_flagged(req: Express.Request, res: Express.Response) {
 // get_many_unflagged
 async function get_many_unflagged(req: Express.Request, res: Express.Response) {
   try {
-    const user = await User.find({'stutus.banned': { $eq: false } });
+    const user = await User.find({'status.banned': { $eq: false } });
     res.status(200).json(user);
   } catch (error: any) {
     res.status(400).json(error.message);
@@ -87,7 +88,7 @@ async function post_one(req: Express.Request, res: Express.Response) {
 async function patch_one_by_id(req: Express.Request, res: Express.Response) {
   try {
     const { userId } = req.params;
-    const user = await User.findByIdAndUpdate(userId, req.body, { new: true });
+    const user = await User.findByIdAndUpdate(userId, req.body, { new: true }); //new=true returns updated user.
     res.status(200).json(user);
   } catch (error: any) {
     res.status(400).json(error.message);
@@ -97,7 +98,7 @@ async function patch_one_by_id(req: Express.Request, res: Express.Response) {
 export {
   get_all,
   get_one_by_id,
-  get_many_flagged,
+  get_many_banned,
   get_many_unflagged,
   post_one,
   patch_one_by_id
