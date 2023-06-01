@@ -5,11 +5,10 @@ import express from "express";
 import mongoose from "mongoose";
 import askRouter from "./routes/askRoutes";
 import userRouter from "./routes/userRoutes";
+import interestRouter from './routes/interestRoutes';
 import { log_message } from "./utilities/envSpecificHelpers";
 import cors from "cors";
 
-// const environment = process.env
-// console.log(environment.NODE_ENV);
 
 const app = express();
 //cors
@@ -35,6 +34,7 @@ app.use(express.json());
 //routes
 app.use("/api/users", userRouter);
 app.use("/api/asks", askRouter);
+app.use("/api/interests", interestRouter)
 
 /** all unknown routes return  list of endpoints */
 app.use("/api", (req, res) => {
@@ -46,5 +46,5 @@ app.use("/api", (req, res) => {
 
 // 404
 app.use((req, res) => {
-  res.status(404).json({ message: "404 not found" });
+  res.status(404).json({ "404": "Not found. check the uri." });
 });

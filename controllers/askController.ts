@@ -1,9 +1,5 @@
-import { error } from "console";
 import Ask from "../models/askModel";
-// import User from "../models/userModel";
 import Express from "express";
-import mongoose, { MongooseError } from "mongoose";
-import { log_message } from "../utilities/envSpecificHelpers";
 
 /** METHODS:
  * get_all // get all asks regardless

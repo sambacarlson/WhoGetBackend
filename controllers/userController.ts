@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
 import User from "../models/userModel";
 import Express from "express";
-import { log_message } from "../utilities/envSpecificHelpers";
 
 /** METHODS:
  * get_all
